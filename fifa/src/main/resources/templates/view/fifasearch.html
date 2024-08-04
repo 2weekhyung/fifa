@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>FIFA 정보 검색</title>
+    <script>
+        // JavaScript 함수: API 요청 및 결과 처리
+        async function searchNickName() {
+            const nickName = document.getElementById('nickName').value;
+            const url = `/fifaInfo?nickName=${encodeURIComponent(nickName)}`;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+
+                // 결과를 화면에 표시
+                document.getElementById('result').innerHTML = `
+                    <p><strong>닉네임:</strong> ${data.nickname}</p>
+                    <p><strong>레벨:</strong> ${data.level}</p>
+                    <p><strong>OUID:</strong> ${data.ouid}</p>
+                `;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('result').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+
+        // 이벤트 핸들러: 검색 버튼 클릭 시 searchNickName 함수 호출
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('search').addEventListener('click', function(event) {
+                event.preventDefault(); // 기본 폼 제출 방지
+                searchNickName();
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>FIFA 정보 검색</h1>
+<form id="frm">
+    <input type="text" id="nickName" placeholder="닉네임을 입력하세요" required>
+    <button id="search">검색하기</button>
+</form>
+<div id="result"></div> <!-- 검색 결과 표시 영역 -->
+</body>
+</html>
